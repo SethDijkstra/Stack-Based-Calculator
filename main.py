@@ -1,5 +1,6 @@
 from stack import ArrayStack
 from bst import BinarySearchTree
+from calculator import PostfixCalculator
 
 
 def evaluate_postfix(expression, variables):
@@ -73,9 +74,8 @@ def evaluate_postfix(expression, variables):
 def main():
     """
     Main function that runs the calculator interface.
-    Handles user input and manages the variable storage.
     """
-    variables = BinarySearchTree()
+    calculator = PostfixCalculator()
     
     print("Stack-Based Calculator for Postfix Notation")
     print("Commands:")
@@ -87,52 +87,49 @@ def main():
     print("  quit (to exit)")
     print()
     
-    # main loop to keep asking for input until user quits
     while True:
         user_input = input("> ").strip()
         
-        # skip empty input
         if user_input == "":
             continue
         
-        # check if user wants to quit
         if user_input.lower() == "quit":
             print("Goodbye!")
             break
         
-        # check if user wants to display all variables
+        # display BST
         if user_input.lower() == "display":
             print("Variables in the tree:")
-            variables.display_tree()
+            calculator.displayVariables()
             continue
         
-        # check if user wants to delete all variables
+        # delete all variables
         if user_input.lower().startswith("delete all"):
-            variables.delete_all()
+            calculator.deleteAllVariables()
             print("All variables deleted")
             continue
         
-        # check if user wants to delete a specific variable
+        # delete single variable
         if user_input.lower().startswith("delete "):
             var_name = user_input.split()[1]
-            variables.delete(var_name)
+            calculator.variableTree.delete(var_name)
             print(f"Variable '{var_name}' deleted")
             continue
         
-        # check if user wants to assign a result to a variable
+        # assignment case
         if '=' in user_input:
             parts = user_input.split('=')
             var_name = parts[0].strip()
             expression = parts[1].strip()
             
-            result = evaluate_postfix(expression, variables)
+            result = calculator.evaluatePostfixExpression(expression)
             if result is not None:
-                variables.insert(var_name, result)
+                calculator.setVariable(var_name, result)
                 print(f"{var_name} = {result}")
         
-        # otherwise just evaluate the expression and display the result
+        # normal evaluation
         else:
-            result = evaluate_postfix(user_input, variables)
+            result = calculator.evaluatePostfixExpression(user_input)
             if result is not None:
                 print(f"Result: {result}")
 
