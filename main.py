@@ -3,7 +3,9 @@ from calculator import PostfixCalculator
 def main():
     """
     Main function that runs the calculator interface.
+    Handles user input and manages the variable storage.
     """
+    # create calculator instance with BST for variables
     calculator = PostfixCalculator()
     
     print("Stack-Based Calculator for Postfix Notation")
@@ -16,36 +18,39 @@ def main():
     print("  quit (to exit)")
     print()
     
+    # main loop to keep asking for input until user quits
     while True:
         user_input = input("> ").strip()
         
+        # skip empty input
         if user_input == "":
             continue
         
+        # check if user wants to quit
         if user_input.lower() == "quit":
             print("Goodbye!")
             break
         
-        # display BST
+        # check if user wants to display all variables
         if user_input.lower() == "display":
             print("Variables in the tree:")
             calculator.displayVariables()
             continue
         
-        # delete all variables
+        # check if user wants to delete all variables
         if user_input.lower().startswith("delete all"):
             calculator.deleteAllVariables()
             print("All variables deleted")
             continue
         
-        # delete single variable
+        # check if user wants to delete a specific variable
         if user_input.lower().startswith("delete "):
             var_name = user_input.split()[1]
             calculator.variableTree.delete(var_name)
             print(f"Variable '{var_name}' deleted")
             continue
         
-        # assignment case
+        # check if user wants to assign a result to a variable
         if '=' in user_input:
             parts = user_input.split('=')
             var_name = parts[0].strip()
@@ -56,7 +61,7 @@ def main():
                 calculator.setVariable(var_name, result)
                 print(f"{var_name} = {result}")
         
-        # normal evaluation
+        # otherwise just evaluate the expression and display the result
         else:
             result = calculator.evaluatePostfixExpression(user_input)
             if result is not None:
